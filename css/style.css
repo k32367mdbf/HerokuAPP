@@ -1,0 +1,145 @@
+/*|||寬螢幕顯示|||*/
+@media screen and (min-aspect-ratio: 1/1) {
+
+	#portrait {
+		opacity: 0;
+	}
+	#landscape {
+		opacity: 1;
+	}
+}
+
+
+/*|||長螢幕顯示|||*/
+@media screen and (max-aspect-ratio: 1/1) {
+
+    #portrait {
+		opacity: 1;
+	}
+	#landscape {
+		opacity: 0;
+	}
+}
+
+
+
+/*完美置中*/
+#centerDemo{
+
+	position: absolute;
+	width: 80vw;
+
+	/*自動換行(切字)*/
+	word-break: break-all;
+
+	/*文字置中*/
+	text-align:center;
+
+	/*元素置中*/
+	left: 50vw;
+	top: 50vh;
+	-webkit-transform: translate(-50%,-50%);
+	-moz-transform: translate(-50%,-50%);
+	-ms-transform: translate(-50%,-50%);
+	-o-transform: translate(-50%,-50%);
+	transform: translate(-50%,-50%);
+
+	/*法二：用Flexbox*/
+/*
+	display:flex;
+	justify-content:center;
+	align-items: center;
+	height: 100vh;
+*/
+
+}
+
+
+
+/*簡易CSS動畫*/
+#cssAnimaDemo:hover {
+    -webkit-animation-name: glow;
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: alternate;
+    -webkit-animation-timing-function: ease-in-out;
+}
+@-webkit-keyframes glow {
+    0% {
+         opacity: 1;
+    }
+    100% {
+         opacity: 0.3;
+    }
+}
+
+
+
+/*簡易按鈕效果(利用擬元素)*/
+.btnDemo {
+
+    /* 樣式 */
+	padding: 8px 35px;
+    font-size: inherit;
+    color: #fff;
+    border: 2px solid #fff;
+    background: none;
+    cursor: pointer;
+	overflow: hidden;
+
+	/*禁止反白*/
+	-webkit-user-select: none;
+	-moz-user-select: none;
+
+    /*效果*/
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+
+}
+
+/*擬元素*/
+.btnDemo:after {
+
+    /* 位置 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+
+    /* 樣式 */
+	width: 100%;
+    height: 0;
+    content: '';
+    background: #fff;
+    opacity: 0;
+
+    /*效果*/
+    -webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+    -moz-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+    -ms-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+    transform: translateX(-50%) translateY(-50%) rotate(45deg);
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+/*按鈕懸停*/
+.btnDemo:hover {
+	/*文字變化*/
+    color: #2b9cfd;
+}
+.btnDemo:hover:after {
+	/*擬元素變化*/
+    height: 165%;
+    opacity: 1;
+}
+
+/*按鈕按下*/
+.btnDemo:active:after {
+    height: 270%;
+    opacity: 1;
+    -webkit-transition: all 0.1s;
+    -moz-transition: all 0.1s;
+    transition: all 0.1s;
+}
