@@ -4,111 +4,62 @@
 
 <head>
    
-    <title>網頁標題</title>
-    
-	<!--網頁icon-->
-    <link rel="shortcut icon" href="pic/favicon.ico"/>
-
-    <!--搜尋引擎的描述-->
-    <meta name="description" content="搜尋引擎的描述" />
-
-    <!--搜尋關鍵字-->
-    <meta name="keywords" content="關鍵字1,關鍵字2,關鍵字3" />
+    <title>HTML Demo</title>
+    <link rel="shortcut icon" href="img/favicon.ico"/>
 
     <!--網頁編碼-->
     <meta charset="utf-8" />
     
     <!--RWD相關-->
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no;" />
     
     <!--CSS-->
-    <link rel="stylesheet" href="css/reset.css"/>
-    <link rel="stylesheet" href="css/style.css"/>
+    <link rel="stylesheet" href="style.css"/>
     
-    
-    
+    <!--JS-->
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/modernizr.js"></script>
+    <script src='js/typed.js-master/js/typed.js'></script>
+    <script src="main.js"></script>
+
 </head>
 
 
 
- 
+
 <body>
-	
-	
-	<!--寬螢幕or長螢幕-->
-	<div 
-	id="portrait" 
-	style="
-	position:absolute; 
-	left:80%; 
-	top:70%; 
-	color:rgba(226, 227, 223, 0.92);"
-	>長螢幕</div>
-	<div 
-	id="landscape" 
-	style="
-	position:absolute; 
-	left:80%; 
-	top:70%; 
-	color:rgba(226, 227, 223, 0.92);"
-	>寬螢幕</div>
-	
-	
-	<!--完美置中-->
-	<div 
-	id="centerDemo" 
-	style="color:rgba(226, 227, 223, 0.92);"
-	>完美置中</div>
-	
-	
-	<!--簡易按鈕效果-->
-	<button 
-	class="btnDemo" 
-	style="
-	position:absolute; 
-	left:70%; 
-	top:10%;"
-	>按鈕</button>
-	
-	
-	<!--簡易CSS動畫-->
-	<div 
-	id="cssAnimaDemo" 
-	style="
-	position:absolute; 
-	left:20%; 
-	top:20%; 
-	color:rgba(226, 227, 223, 0.92);"
-	>簡易CSS動畫</div>
-	
-	
-	<!--簡易jQuery動畫-->
-	<div 
-	id="jqAnimaDemo" 
-	style="
-	position:absolute; 
-	left:20%; 
-	top:30%; 
-	color:rgba(226, 227, 223, 0.92);"
-	>簡易jQuery動畫</div>
-	
-	
-	<!--動態修改內容-->
-	<div 
-	id="editContent" 
-	style="
-	position:absolute; 
-	left:10%; 
-	top:60%; 
-	color:rgba(226, 227, 223, 0.92);"
-	>動態修改內容</div>
-
-
-
-	<!--JS放最後較穩定-->
-    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-    <script src="js/main.js"></script>
+           
+    <video autoplay id="camera" style=" height:100vh; "></video>
     
+	<!--外框-->
+    <img id="border" src="img/frame.png">
+    
+          
+    <!--設定按鈕-->
+		<img id="settingBtn" class="ui" src="img/setting.png" width="20%">
+             
+    
+	<!---------遊戲內容---------->
+    
+	<!--LOGO-->
+    <img id="logo" src="img/logo.png">
+
+
+	<!--ghost-->
+    <img id='ghost' class='npc' src='img/ghost.png' style="top:20vh; left:20vw; opacity:0.5; ">
+    
+    
+    <!--對話框-->
+    <div class="frame">
+       	<img class="frame" src="img/bar.png">
+        <h1 id='typed'></h1>
+    </div>
+    
+    
+	<!--Overlay-->
+    <img id='overlay' class='overlay' src='img/overlay.png'>
+
+
 </body>
 
 </html>
