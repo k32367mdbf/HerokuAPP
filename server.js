@@ -481,7 +481,7 @@ app.post('/hw', function(req, res){
 	}
 });
 app.get('/', function(req, res){
-    res.sendfile('public/fin.html');
+    res.sendfile('public/game.html');
 });
 app.get('/hw', function(req, res){
     res.sendfile('public/hw.html');
