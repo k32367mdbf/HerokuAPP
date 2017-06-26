@@ -14,7 +14,7 @@ var passport = require('passport')
 
 var mongoose = require('mongoose');
 var USER_PASSWD = process.argv[2];
-var port = 1234;
+var port = process.env.PORT;
 
 var lex = LEX.create({
 	configDir: require('os').homedir() + '/letsencrypt/etc'
