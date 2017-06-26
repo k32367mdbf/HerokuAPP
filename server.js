@@ -14,7 +14,7 @@ var passport = require('passport')
 
 var mongoose = require('mongoose');
 var USER_PASSWD = process.argv[2];
-var port = process.env.PORT;
+
 
 var lex = LEX.create({
 	configDir: require('os').homedir() + '/letsencrypt/etc'
@@ -33,7 +33,7 @@ app.use(express.static(__dirname + '/public'));
 lex.onRequest = app;
 
 
-https.createServer(lex.httpsOptions, LEX.createAcmeResponder(lex, app)).listen(port);
+https.createServer(lex.httpsOptions, LEX.createAcmeResponder(lex, app)).listen(process.env.PORT || 2017);
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended: true , limit: '50mb'}));
 app.use(express.static(__dirname + '/public'));
