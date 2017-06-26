@@ -32,7 +32,7 @@ app.use(express.static(__dirname + '/public'));
 
 lex.onRequest = app;
 
-
+console.log('1');
 https.createServer(lex.httpsOptions, LEX.createAcmeResponder(lex, app)).listen(port);
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended: true , limit: '50mb'}));
@@ -42,7 +42,7 @@ app.use(passport.session());
 mongoose.connect('mongodb://groupA:'+USER_PASSWD+'@localhost/groupA' , function(){
 	console.log('database connect');
 });
-
+console.log('2');
 var db = mongoose.connection;
 
 db.on('error', function (err) {
@@ -71,7 +71,7 @@ db.once('open', function () {
 		wifiLevel : {type : Object}
 	});
 	
-	
+	console.log('3');
 /////////////////////////////////////////////////////////////////////////////////////////////////
 	passport.use(new FacebookStrategy({
 			clientID: '1746634072260669',
