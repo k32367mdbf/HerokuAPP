@@ -14,7 +14,7 @@ var passport = require('passport')
 
 var mongoose = require('mongoose');
 var USER_PASSWD = process.argv[2];
-var port = 8013;
+var port = 1234;
 
 var lex = LEX.create({
 	configDir: require('os').homedir() + '/letsencrypt/etc'
@@ -32,7 +32,7 @@ app.use(express.static(__dirname + '/public'));
 
 lex.onRequest = app;
 
-console.log('1');
+
 https.createServer(lex.httpsOptions, LEX.createAcmeResponder(lex, app)).listen(port);
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended: true , limit: '50mb'}));
@@ -42,7 +42,7 @@ app.use(passport.session());
 mongoose.connect('mongodb://groupA:'+USER_PASSWD+'@localhost/groupA' , function(){
 	console.log('database connect');
 });
-console.log('2');
+
 var db = mongoose.connection;
 
 db.on('error', function (err) {
@@ -51,7 +51,7 @@ db.on('error', function (err) {
 db.once('open', function () {
 
     var Schema = mongoose.Schema;
-	
+
 	var storyData = new Schema({
 		account: {type: String, unique : true},
 		name : {type : String},
@@ -70,8 +70,8 @@ db.once('open', function () {
 		id : {type : Number},
 		wifiLevel : {type : Object}
 	});
-	
-	console.log('3');
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 	passport.use(new FacebookStrategy({
 			clientID: '1746634072260669',
@@ -90,7 +90,7 @@ db.once('open', function () {
 		function(req,res){
 			story.findOne({account:req.user.id}, function(error, result){
 				if(result != null){
-					
+
 					var storyStage;
 					for(i=0;i<result.data.length;i++){
 						if(result.data[i] == 1&& (result.data[i+1] == 0 || result.data[i+1]==undefined)){
@@ -98,13 +98,13 @@ db.once('open', function () {
 							break;
 						}
 					}
-					
+
 					res.cookie('storyStage', i);
 					res.cookie('gameStage', result.gameStage);
 					res.cookie('hp', result.hp);
 					res.cookie('usrd', req.user.id);
 					res.cookie('usrn', req.user.name);
-					
+
 				}
 				else{
 					new story({
@@ -121,9 +121,9 @@ db.once('open', function () {
 					res.cookie('usrn', req.user.name);
 				}
 				res.redirect('/game');
-			});	
+			});
 		}
-		
+
 	);
 	passport.serializeUser(function(user, done) {
 	  done(null, user);
@@ -133,16 +133,16 @@ db.once('open', function () {
 	  done(null, user);
 	});
 /////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	
+
+
 	var story = mongoose.model('story' , storyData);
 	var storyCoord = mongoose.model('storyCoord', storyCoords);
 	var wifi = mongoose.model('wifi', wifiGPS);
-	
+
 	//主線NPC說話順序
 	var storyOrder = [0,1,2,0,0,0,3,0,4,0,0,0,0];
 	var storyHint = [[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
-	
+
 	app.post('/login',function(req,res){
 		//req = facebook user id
 		var path = 'usr/'+sha1(req.body.id);
@@ -162,12 +162,12 @@ db.once('open', function () {
 		console.log(req.body);
 		res.send(sha1(req.body.id).toString());
 	});
-	
+
 	//讀取玩家資料
 	app.post('/getPlayerData', function(req,res){
 		story.findOne({account:req.body.id}, function(error, result){
 			if(result != null){
-				
+
 				var storyStage;
 				for(i=0;i<result.data.length;i++){
 					if(result.data[i] == 1&& (result.data[i+1] == 0 || result.data[i+1]==undefined)){
@@ -182,11 +182,11 @@ db.once('open', function () {
 					hp : result.hp
 				};
 				res.send(data);
-				
+
 			}
 		});
 	});
-	
+
 	//儲存玩家資料
 	app.post('/savePlayerData', function(req, res){
 		story.update(
@@ -194,7 +194,7 @@ db.once('open', function () {
 			{$set : {
 				gameStage : req.body.gameStage,
 				hp : req.body.hp
-			}}, 
+			}},
 			function(error){
 				if(error){
 					res.send(error);
@@ -205,7 +205,7 @@ db.once('open', function () {
 			}
 		);
 	});
-	
+
 	//重設玩家資料的後門 :P
 	app.get('/reset',function(req, res){
 		story.findOne({name:req.query.name}, function(error,result){
@@ -236,50 +236,50 @@ db.once('open', function () {
 			}
 		});
 	});
-	
+
 	//讀NPC說話的內容
 	app.post('/content', function(req, res){
-		
+
 		//遊戲階段
 		var gameStage;
-		
+
 	    //讀使用者的故事進度資料
 	    story.findOne({account:req.body.account} , function(error, result){
 		    if(result != null){
 			    var data = result.data;        //故事進度
 				var fileName = req.body.id;    //要讀取的文字檔檔名
-				
+
 				//檢查故事進度到哪個階段
 				for(i=0;i<data.length;i++){
 				    //讀取主線劇情
 				    if(data[i-1] == 1 && (data[i] == 0||data[i] == undefined)){
 					    //故事進度與主線NPC符合
 						if(storyOrder[i] == req.body.id ){
-							
+
 							//儲存遊戲階段
 							gameStage = i;
-							
+
 							//文字檔檔名改成主線劇情的文字檔
 							fileName = i+'main';
 
 							//故事進度推進
-							data[i] = 1;	
-								
+							data[i] = 1;
+
 							//更新使用者的故事進度
 							story.update({account:req.body.account}, {$set:{data:data}}, function(){
 								console.log({account : result.account , Event : 'update to stage' + i});
-							});							
-													
+							});
+
 						}
 						//提示NPC的判定
 						else{
 							//儲存遊戲階段
 							gameStage = (i-1);
-							
+
 						    for(j=0;j<storyHint[i].length;j++){
 							    //如果id有存在該階段的提示裡
 							    if(req.body.id == storyHint[i][j]){
-								
+
 								    //檔名改成提示用NPC的文字檔(檔名為 : "階段"-"NPCID"hint)
 								    fileName = i + '-' + req.body.id + 'hint';
 									break;
@@ -291,7 +291,7 @@ db.once('open', function () {
 				}
 				//讀取文字檔
 				fs.readFile('public/npccontent/'+fileName+'.txt', function(err, data){
-						
+
 					if(err){
 						console.log(err);
 						res.send('read file error');
@@ -300,21 +300,21 @@ db.once('open', function () {
 						var storyContent = {
 							stage : gameStage,
 							content : data.toString()
-						}; 
+						};
 						res.send(storyContent);
 					}
 				});
-								
-            }	
+
+            }
 			else{
 				res.send(result);
-			}			
-		});	
+			}
+		});
 	});
-	
+
 	app.post('/triggerContent', function(req, res){
 		story.findOne({account:req.body.account} , function(error, result){
-			
+
 		    if(result != null){
 			    var data = result.data;        //故事進度
 				var fileName = req.body.id;    //要讀取的文字檔檔名
@@ -322,28 +322,28 @@ db.once('open', function () {
 
 				//檢查故事進度到哪個階段
 				for(i=0;i<data.length;i++){
-					
+
 				    //讀取主線劇情
-				    if(data[i-1]==1 && (data[i]==0||data[i] == undefined)){	    
+				    if(data[i-1]==1 && (data[i]==0||data[i] == undefined)){
 						progress = i;
 						break;
 					}
 				}
-				
+
 				//故事進度與主線NPC符合
-				if(storyOrder[progress] == req.body.id ){	
-					
+				if(storyOrder[progress] == req.body.id ){
+
 					if(req.body.pos == 'true'){
 						storyCoord.findOne({stage : progress}, function(err, resu){
-							if(resu!=null&&resu.stage == progress){	
+							if(resu!=null&&resu.stage == progress){
 								fileName = progress+'main';
 								//故事進度推進
 								data[progress] = 1;
-											
+
 								//更新使用者的故事進度
 								story.update({account:req.body.account}, {$set:{data:data}}, function(){
 									console.log({account : result.account , Event : 'update to stage' + progress});
-								});			
+								});
 								fs.readFile('public/npccontent/'+fileName+'.txt', function(err, data){
 									if(err){
 										console.log(err);
@@ -356,7 +356,7 @@ db.once('open', function () {
 										};
 										res.send(storyContent);
 									}
-								});				
+								});
 							}
 							else{console.log(0);
 								res.send(false);
@@ -366,17 +366,17 @@ db.once('open', function () {
 					else{
 						storyCoord.findOne({
 							stage : progress
-						}, 
+						},
 						function(err, resu){console.log(resu)
-							if(resu!=null&&resu.stage == progress){	
+							if(resu!=null&&resu.stage == progress){
 								fileName = progress+'main';
 								//故事進度推進
 								data[progress] = 1;
-											
+
 								//更新使用者的故事進度
 								story.update({account:req.body.account}, {$set:{data:data}}, function(){
 									console.log({account : result.account , Event : 'update to stage' + progress});
-								});			
+								});
 								fs.readFile('public/npccontent/'+fileName+'.txt', function(err, data){
 									if(err){
 										console.log(err);
@@ -389,32 +389,32 @@ db.once('open', function () {
 										};
 										res.send(storyContent);
 									}
-								});				
+								});
 							}
 							else{
 								res.send(false);
 							}
 						});
-					}								
-				}	
+					}
+				}
 				else{
 					res.send(false);
 				}
-            }			
+            }
 		});
 	});
-	
+
 	app.post('/getWifiGPS', function(req, res){
 		wifi.find().lean().exec(function(err, result){
 			res.send(result);
 		});
 	});
-	
+
 });
 
 app.post('/img',function(req,res){
-	
-	
+
+
 	var imgData = req.body.img;                                            //取得base64編碼
 	var base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");      //過濾編碼
 	var dataBuffer = new Buffer(base64Data, 'base64');                     //將編碼放入buffer
@@ -426,21 +426,21 @@ app.post('/img',function(req,res){
 			console.log(err);
 		    res.send(err);
 		}else{
-			
+
 			//儲存成功進入圖形比對
 			//呼叫child.cpp
 			var cp = child.spawn('./child',[]);
-		    
+
 			//輸入檔案路徑給child.cpp
 		    cp.stdin.write(new Buffer('usr/'+req.body.name+'/'+req.body.imgName+'.png\n'));
 		    cp.stdin.write(new Buffer('public/cv/'+req.body.imgName+'.png'));
 		    cp.stdin.end();
-			
+
 			//接收child.cpp輸出的資料
 		    cp.stdout.on('data',function(data){
 				//刪除使用者存的圖片
 				var rm = child.spawn('rm', ['usr/'+req.body.name+'/'+req.body.imgName+'.png']);
-				
+
 				//回傳判斷結果
 				if(data.toString()=='1'){
 					res.send(true);
@@ -448,15 +448,15 @@ app.post('/img',function(req,res){
 				else{
 					res.send(false);
 				}//res.send(data.toString());
-				
+
 		    });
-			
+
 			//錯誤處理
 			cp.stderr.on('data',function(data){
 				var rm = child.spawn('rm', ['usr/'+req.body.name+'/'+req.body.imgName+'.png']);
 				res.send(data);
 			});
-			
+
 			//res.send('success');
 		}
 	});
@@ -472,7 +472,7 @@ app.get('/range', function(req, res){
 		res.send('<h1>現在誤差為 : '+range+'</h1>');
 	}
 	else{
-		res.send('<h1>參數錯誤</h1>'); 
+		res.send('<h1>參數錯誤</h1>');
 	}
 });
 app.post('/range', function(req, res){
