@@ -72,28 +72,40 @@ function errorCallback(error)
 
 var exArray = []; //用來存裝置串流來源  
 //取得裝置串流來源 
-MediaStreamTrack.getSources(
-    function (sourceInfos)
-    {  
-        for(var i = 0; i != sourceInfos.length; ++i)
-        {  
-            var sourceInfo = sourceInfos[i];  
-            if (sourceInfo.kind === 'video') //會遍歷audio,video，所以要判斷 
-                exArray.push(sourceInfo.id);  
-        }
-        //取得視訊串流
-        navigator.getUserMedia(
-            {
-             'video':
-             {  
-                //0為前置，1為後置
-                'optional': [ {'sourceId': exArray[1]} ]  
-             }
-            },
-            successCallback, errorCallback);        
-    });
+// MediaStreamTrack.getSources(
+//     function (sourceInfos)
+//     {  
+//         for(var i = 0; i != sourceInfos.length; ++i)
+//         {  
+//             var sourceInfo = sourceInfos[i];  
+//             if (sourceInfo.kind === 'video') //會遍歷audio,video，所以要判斷 
+//                 exArray.push(sourceInfo.id);  
+//         }
+//         //取得視訊串流
+//         navigator.getUserMedia(
+//             {
+//              'video':
+//              {  
+//                 //0為前置，1為後置
+//                 'optional': [ {'sourceId': exArray[1]} ]  
+//              }
+//             },
+//             successCallback, errorCallback);        
+//     });
+
+var getUserMedia = navigator.webkitGetUserMedia; //Chrome瀏覽器的方法
+
+getUserMedia.call(navigator, {
+video:true, // 開啟音頻
+audio:true // 開啟視頻
+}, function(stream){
+console.log(stream); // 成功獲取媒體流
+}, function(error){
+//處理媒體流創建失敗錯誤
+});
 
 
+原文網址：https://kknews.cc/zh-tw/news/bbvoz9.html
 
 //拍照-------------------------------------
 
