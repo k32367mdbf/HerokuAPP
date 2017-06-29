@@ -95,14 +95,11 @@ var exArray = []; //用來存裝置串流來源
 
 var getUserMedia = navigator.webkitGetUserMedia; //Chrome瀏覽器的方法
 
-getUserMedia.call(navigator, {
-video:true, // 開啟音頻
-audio:true // 開啟視頻
-}, function(stream){
-console.log(stream); // 成功獲取媒體流
-}, function(error){
-//處理媒體流創建失敗錯誤
-});
+getUserMedia.call(navigator,
+{
+    video:true, // 開啟音頻
+    audio:true // 開啟視頻
+},successCallback, errorCallback);
 
 //拍照-------------------------------------
 
