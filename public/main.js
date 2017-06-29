@@ -97,8 +97,8 @@ var getUserMedia = navigator.webkitGetUserMedia; //Chrome瀏覽器的方法
 
 getUserMedia.call(navigator,
 {
-    video:true, // 開啟音頻
-    audio:true // 開啟視頻
+    video:true, // 開啟視頻
+    audio:false // 開啟音頻
 },successCallback, errorCallback);
 
 //拍照-------------------------------------
