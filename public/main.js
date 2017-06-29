@@ -70,7 +70,33 @@ function errorCallback(error)
 }
 
 
-var exArray = []; //用來存裝置串流來源  
+var exArray = []; //用來存裝置串流來源
+
+navigator.mediaDevices.enumerateDevices().then(function (data)
+{
+    data.forEach(function (item)
+    {
+        //摄像头
+        if (item.kind == "videoinput")
+        { 
+            exArray.push(item.deviceId);
+        }
+
+        var getUserMedia = navigator.webkitGetUserMedia; //Chrome瀏覽器的方法
+        getUserMedia.call(navigator,
+        {
+            // 視頻
+            video:
+            {
+                "mandatory":{ "sourceId": exArray[1] } // 指定设备的 deviceId
+            }, 
+            audio:false // 音頻
+        },successCallback, errorCallback);
+    })
+}, function (error) {
+    console.log(error);
+})
+
 //取得裝置串流來源 
 // MediaStreamTrack.getSources(
 //     function (sourceInfos)
@@ -93,13 +119,7 @@ var exArray = []; //用來存裝置串流來源
 //             successCallback, errorCallback);        
 //     });
 
-var getUserMedia = navigator.webkitGetUserMedia; //Chrome瀏覽器的方法
 
-getUserMedia.call(navigator,
-{
-    video:true, // 開啟視頻
-    audio:false // 開啟音頻
-},successCallback, errorCallback);
 
 //拍照-------------------------------------
 
