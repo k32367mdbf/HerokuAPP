@@ -104,9 +104,6 @@ console.log(stream); // 成功獲取媒體流
 //處理媒體流創建失敗錯誤
 });
 
-
-原文網址：https://kknews.cc/zh-tw/news/bbvoz9.html
-
 //拍照-------------------------------------
 
 function snapshot(canvasID)
